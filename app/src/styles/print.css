@@ -1,6 +1,7 @@
 @media print {
-  body { background: white !important; }
+  body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .print-resume { box-shadow: none !important; }
+  .fixed { display: none !important; }
 }
 
 

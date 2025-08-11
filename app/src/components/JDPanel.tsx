@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAppState } from '../store/appState';
-import { postJDPatched, postUtilJDCoverage } from '../lib/chat';
+import { aiPatch, aiUtil } from '../lib/api';
 import type { Suggestion } from '../types';
 import SuggestionItem from './SuggestionItem';
 import InlineToast from './InlineToast';
@@ -20,13 +20,13 @@ export default function JDPanel() {
     setQuestions([]);
     setSuggestions([]);
     try {
-      const env = await postJDPatched({ resume, jdText: jd });
+      const env = await aiPatch({ mode: 'jd', resume, jdText: jd });
       if ('questions' in env) {
         setQuestions(env.questions);
       } else {
         setSuggestions(env.patch);
       }
-      const cov = await postUtilJDCoverage({ resume, jdText: jd });
+      const cov = await aiUtil({ kind: 'jd-coverage', resume, jdText: jd });
       setCoverage({ used: cov.used, missing: cov.missing, score: cov.score });
       useAppState.setState({ metrics: { used: cov.used, missing: cov.missing, score: cov.score } });
     } catch (e) {

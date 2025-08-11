@@ -15,6 +15,7 @@ const BodySchema = z
 export const router = Router();
 
 router.post('/', async (req, res) => {
+  res.setHeader('x-trace-id', `trace_${Date.now()}`);
   const parse = BodySchema.safeParse(req.body);
   if (!parse.success) {
     return res.status(400).json({ error: 'invalid_body', details: parse.error.flatten() });
@@ -24,7 +25,7 @@ router.post('/', async (req, res) => {
     if (kind === 'normalize-dates') {
       return res.json({ patch: [], responseId: 'mock_util_patch_1' });
     } else {
-      return res.json({ used: [], missing: [], score: 0, responseId: 'mock_util_cov_1' });
+      return res.json({ used: ['TypeScript'], missing: ['GraphQL', 'CI/CD'], score: 33, responseId: 'mock_util_cov_1' });
     }
   }
   const client = getOpenAIClient();

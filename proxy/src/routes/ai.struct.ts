@@ -13,6 +13,7 @@ const BodySchema = z
 export const router = Router();
 
 router.post('/', async (req, res) => {
+  res.setHeader('x-trace-id', `trace_${Date.now()}`);
   const parse = BodySchema.safeParse(req.body);
   if (!parse.success) {
     return res.status(400).json({ error: 'invalid_body', details: parse.error.flatten() });

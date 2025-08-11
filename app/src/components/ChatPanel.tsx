@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
 import { useAppState } from '../store/appState';
-import { postEditPatch } from '../lib/chat';
 import type { Suggestion } from '../types';
-import SuggestionItem from './SuggestionItem';
-import { applyWithValidation } from '../lib/applyPatch';
 import Questions from './Questions';
 import InlineToast from './InlineToast';
+import { aiPatch } from '../lib/api';
 
 export default function ChatPanel() {
   const { resume, convo } = useAppState();
   const [input, setInput] = useState('Tighten current role bullets to impact + metric + tool');
   const [loading, setLoading] = useState(false);
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [questions, setQuestions] = useState<string[]>([]);
   const [responseId, setResponseId] = useState<string | undefined>(undefined);
   const [error, setError] = useState<string | undefined>(undefined);
@@ -21,7 +18,7 @@ export default function ChatPanel() {
     setLoading(true);
     setQuestions([]);
     try {
-      const resp = await postEditPatch({ resume, instruction: text, previousResponseId: convo.previousResponseId });
+      const resp = await aiPatch({ mode: 'edit', resume, instruction: text, previousResponseId: convo.previousResponseId });
       const rid = (resp as any).responseId as string | undefined;
       setResponseId(rid);
       if (rid) {
@@ -29,15 +26,15 @@ export default function ChatPanel() {
         localStorage.setItem('previousResponseId', rid);
       }
       if ('questions' in resp) {
-        setSuggestions([]);
+        useAppState.setState({ suggestions: [] });
         setQuestions(resp.questions);
       } else {
         setQuestions([]);
-        setSuggestions(resp.patch);
+        useAppState.setState({ suggestions: resp.patch });
       }
     } catch (e) {
       setError((e as Error).message || 'Unknown error');
-      setSuggestions([]);
+      useAppState.setState({ suggestions: [] });
     } finally {
       setLoading(false);
     }
@@ -47,27 +44,22 @@ export default function ChatPanel() {
     await performSend(input);
   }
 
-  function acceptOne(idx: number) {
-    const s = suggestions[idx];
-    if (!s) return;
-    const res = applyWithValidation(resume as any, [s]);
-    if (res.ok) {
-      useAppState.setState({ resume: res.value! });
-      const prev = Number(localStorage.getItem('appliedCount') || '0');
-      localStorage.setItem('appliedCount', String(prev + 1));
-    }
-  }
-
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" role="region" aria-label="Chat panel">
       <div className="flex gap-2">
         <input
           className="flex-1 border rounded px-2 py-1"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask for edits (patches only)"
+          onKeyDown={(e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); void send(); }
+            if (e.key === 'Escape') { e.preventDefault(); setInput(''); }
+            if (e.key === 'ArrowUp') { e.preventDefault(); setInput((prev) => prev || 'Tighten current role bullets to impact + metric + tool'); }
+          }}
+          aria-label="Chat input"
         />
-        <button className="px-3 py-1 bg-blue-600 text-white rounded disabled:opacity-60" onClick={send} disabled={loading}>
+        <button className="px-3 py-1 bg-blue-600 text-white rounded disabled:opacity-60" onClick={send} disabled={loading} aria-label="Send message">
           {loading ? '…' : 'Send'}
         </button>
       </div>
@@ -89,14 +81,6 @@ export default function ChatPanel() {
             void performSend(instruction);
           }}
         />
-      )}
-      {suggestions.length > 0 && (
-        <div className="space-y-2">
-          <div className="text-sm font-semibold">Suggestions</div>
-          {suggestions.map((s, i) => (
-            <SuggestionItem key={s.id} s={s} onAccept={() => acceptOne(i)} />
-          ))}
-        </div>
       )}
     </div>
   );
