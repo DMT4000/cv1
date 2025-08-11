@@ -1,0 +1,22 @@
+John Doe
+AI Engineer
+john@example.com | +1 555 111 2222 | https://github.com/john
+
+Summary
+Full-stack engineer with AI experience.
+
+Skills
+TypeScript, React, Node, Python
+
+Experience
+Acme Corp — Senior Engineer — San Francisco
+2019-01 to Present
+• Shipped features improving activation
+• Improved reliability
+
+Education
+State University
+BSc Computer Science
+2015 - 2019
+
+

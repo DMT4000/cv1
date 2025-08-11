@@ -1,0 +1,19 @@
+{
+  "name": "cv-cursor",
+  "private": true,
+  "version": "0.1.0",
+  "engines": { "node": ">=18.0.0" },
+  "workspaces": ["app", "proxy"],
+  "scripts": {
+    "dev": "concurrently \"npm:dev:app\" \"npm:dev:proxy\"",
+    "dev:app": "npm --workspace app run dev",
+    "dev:proxy": "npm --workspace proxy run dev",
+    "build": "npm -ws run build",
+    "test": "npm -ws run test"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
+
+

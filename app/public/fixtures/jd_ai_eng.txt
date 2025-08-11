@@ -1,0 +1,15 @@
+AI Engineer — LLM Applications
+
+What you'll do
+- Build RAG-powered features using LangChain/LlamaIndex and vector DBs (FAISS/PGVector).
+- Design and maintain evaluation harnesses (precision/recall, F1, cost/latency).
+- Productionize prompts and retrieval pipelines; implement observability and guardrails.
+- Collaborate with PMs to run experiments that measurably improve task success.
+
+Requirements
+- Strong Python, PyTorch or similar, Docker, CI/CD.
+- Experience with vector search and chunking strategies.
+- Proven wins reducing hallucinations and improving latency/cost.
+- Bonus: Mixpanel/Amplitude for experiment analysis.
+
+

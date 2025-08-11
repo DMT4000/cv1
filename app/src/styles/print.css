@@ -1,0 +1,6 @@
+@media print {
+  body { background: white !important; }
+  .print-resume { box-shadow: none !important; }
+}
+
+

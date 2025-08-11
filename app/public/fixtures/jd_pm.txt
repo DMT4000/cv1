@@ -1,0 +1,19 @@
+Senior Product Manager — AI Platform
+
+About the role
+Lead discovery and delivery for AI-powered product experiences that improve activation, retention, and customer value.
+
+Responsibilities
+- Own roadmap for AI features (LLM-driven workflows, assistants, and insights).
+- Partner with Eng/Design to ship experiments that move activation and retention.
+- Define north-star metrics; instrument and analyze funnels (Mixpanel or Amplitude).
+- Run structured discovery (user interviews, JTBD, prototypes) and prioritize ruthlessly.
+- Ensure safety/guardrails and cost/latency trade-offs for AI features.
+
+Requirements
+- 4+ years PM experience; shipped customer-facing products.
+- Demonstrated A/B testing and funnel analytics (Mixpanel/Amplitude).
+- Familiarity with LLMs, prompting, and evaluation approaches.
+- Strong stakeholder communication; agile delivery experience.
+
+
