@@ -7,7 +7,14 @@ import { router as aiStructRouter } from './routes/ai.struct.js';
 import { router as aiUtilRouter } from './routes/ai.util.js';
 
 const app = express();
-app.use(cors());
+const allow = (process.env.CORS_ALLOW_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean);
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true);
+    if (allow.includes(origin)) return cb(null, true);
+    return cb(new Error('CORS'), false as any);
+  },
+}));
 app.use(express.json({ limit: '1mb' }));
 
 // Basic health

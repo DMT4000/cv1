@@ -6,14 +6,18 @@
   "scripts": {
     "dev": "vite --port 5176",
     "build": "tsc -p tsconfig.json && vite build",
+    "postbuild": "cp dist/index.html dist/404.html || copy dist\\index.html dist\\404.html",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.1",
     "zustand": "^4.5.2",
+    "lucide-react": "^0.441.0",
+    "framer-motion": "^11.2.11",
     "pdfjs-dist": "^4.8.69",
     "tesseract.js": "^5.1.1",
     "mammoth": "^1.6.0"
@@ -21,6 +25,7 @@
   "devDependencies": {
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@playwright/test": "^1.45.3",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "autoprefixer": "^10.4.19",

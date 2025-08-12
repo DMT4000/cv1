@@ -1,3 +1,32 @@
+import React, { useState } from 'react';
+
+type Props = { questions: string[]; onSubmit: (answers: string[]) => void };
+
+export default function Questions({ questions, onSubmit }: Props) {
+  const [answers, setAnswers] = useState<string[]>(Array.from({ length: questions.length }, () => ''));
+  return (
+    <div className="space-y-2 border rounded p-2">
+      <div className="text-sm font-semibold">Questions</div>
+      {questions.map((q, i) => (
+        <div key={i} className="space-y-1">
+          <div className="text-sm">{q}</div>
+          <input
+            className="w-full border rounded px-2 py-1 text-sm"
+            value={answers[i]}
+            onChange={(e) => {
+              const next = answers.slice();
+              next[i] = e.target.value;
+              setAnswers(next);
+            }}
+            placeholder="Your answer"
+          />
+        </div>
+      ))}
+      <button className="px-3 py-1 bg-blue-600 text-white rounded" onClick={() => onSubmit(answers)}>Submit</button>
+    </div>
+  );
+}
+
 import React, { useMemo, useState } from 'react';
 
 type Props = { questions: string[]; onSubmit: (answers: string[]) => void };

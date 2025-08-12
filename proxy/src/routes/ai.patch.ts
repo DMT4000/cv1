@@ -19,6 +19,7 @@ const BodySchema = z
 export const router = Router();
 
 router.post('/', async (req, res) => {
+  res.setHeader('x-trace-id', `trace_${Date.now()}`);
   const parse = BodySchema.safeParse(req.body);
   if (!parse.success) {
     return res.status(400).json({ error: 'invalid_body', details: parse.error.flatten() });
@@ -26,8 +27,13 @@ router.post('/', async (req, res) => {
 
   const body = parse.data;
   if (process.env.MOCK_OPENAI === '1' || !process.env.OPENAI_API_KEY) {
-    const mock = { patch: [], responseId: 'mock_patch_1' };
-    return res.json(mock);
+    // Deterministic mock: return a small, safe patch so UI is usable offline
+    const resume = body.resume as any;
+    const patch = [
+      { id: 'mp1', path: '/summary', kind: 'replace', oldValue: resume.summary ?? '', newValue: 'Concise impact-first summary highlighting TS/React.', rationale: 'Tighten wording; surface tools', provenance: body.mode === 'jd' ? 'from_jd' : (body.instruction ? 'from_user' : 'from_resume') },
+      { id: 'mp2', path: `/skills/${Array.isArray(resume.skills) ? resume.skills.length : 0}`, kind: 'insert', newValue: 'GraphQL', rationale: 'Adds a common web stack keyword', provenance: body.mode === 'jd' ? 'from_jd' : 'from_resume' },
+    ];
+    return res.json({ patch, responseId: 'mock_patch_1' });
   }
   const client = getOpenAIClient();
   const { mainModel } = getModels();
